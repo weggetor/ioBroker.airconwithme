@@ -1,6 +1,6 @@
 {
   "name": "iobroker.airconwithme",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
   "author": {
     "name": "weggetor",
