@@ -1,7 +1,4 @@
 "use strict";
-/*
- * Created with @iobroker/create-adapter v1.31.0
- */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
@@ -25,12 +22,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// The adapter-core module gives you access to the core ioBroker functions
-// you need to create an adapter
 const utils = __importStar(require("@iobroker/adapter-core"));
 const axios_1 = __importDefault(require("axios"));
-// Load your modules here, e.g.:
-// import * as fs from "fs";
 class Airconwithme extends utils.Adapter {
     constructor(options = {}) {
         super({
@@ -79,24 +72,15 @@ class Airconwithme extends utils.Adapter {
         ];
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
-        // this.on('objectChange', this.onObjectChange.bind(this));
-        // this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
     }
     /**
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
-        // Initialize your adapter here
-        // The adapters config (in the instance object everything under the attribute "native") is accessible via
-        // this.config:
         this.log.info('config ipaddress: ' + this.config.ipaddress);
-        this.log.info('config username: ' + this.config.username);
-        this.log.info('config password: ' + this.config.password);
         this.baseUrl = 'http://' + this.config.ipaddress + '/api.cgi';
-        /*
-        For every state in the system there has to be also an object of type state
-        */
+        // We need a datapoint for reachability of our aircondition
         await this.setObjectNotExistsAsync('reachable', {
             type: 'state',
             common: {
@@ -108,6 +92,7 @@ class Airconwithme extends utils.Adapter {
             },
             native: {},
         });
+        // Now we create all informational datapoints of the aircon
         for (const infoProp of this.infoMetadata) {
             await this.setObjectNotExistsAsync('info.' + infoProp.name, {
                 type: 'state',
@@ -121,29 +106,16 @@ class Airconwithme extends utils.Adapter {
                 native: {},
             });
         }
-        // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
+        // Now we read all available informations from the aircon (incl. creating other datapoints like set Temperatur etc.) and setting the values
         this.readInformation();
+        // We subscribe on these datapoints to let them change by user interaction
         this.subscribeStates('on');
         this.subscribeStates('userMode');
         this.subscribeStates('fanSpeed');
         this.subscribeStates('position');
         this.subscribeStates('userSetpoint');
         this.subscribeStates('remoteDisable');
-        // You can also add a subscription for multiple states. The following line watches all states starting with "lights."
-        // this.subscribeStates('lights.*');
-        // Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-        // this.subscribeStates('*');
-        /*
-            setState examples
-            you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-        */
-        // the variable testVariable is set to true as command (ack=false)
-        //await this.setStateAsync('info.wlanSTAMAC', 'CC:3F:1D:02:49:94');
-        // same thing, but the value is flagged "ack"
-        // ack should be always set to true if the value is received from or acknowledged from the target system
-        // await this.setStateAsync('testVariable', { val: true, ack: true });
-        // same thing, but the state is deleted after 30s (getState will return null afterwards)
-        // await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
+        // Now we refresh our values every 60 seconds
         this.infoInterval = setInterval(async () => {
             this.readInformation();
         }, 60000);
@@ -153,10 +125,6 @@ class Airconwithme extends utils.Adapter {
      */
     onUnload(callback) {
         try {
-            // Here you must clear all timeouts or intervals that may still be active
-            // clearTimeout(timeout1);
-            // clearTimeout(timeout2);
-            // ...
             clearInterval(this.infoInterval);
             callback();
         }
@@ -164,55 +132,17 @@ class Airconwithme extends utils.Adapter {
             callback();
         }
     }
-    // If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-    // You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-    // /**
-    //  * Is called if a subscribed object changes
-    //  */
-    // private onObjectChange(id: string, obj: ioBroker.Object | null | undefined): void {
-    //     if (obj) {
-    //         // The object was changed
-    //         this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-    //     } else {
-    //         // The object was deleted
-    //         this.log.info(`object ${id} deleted`);
-    //     }
-    // }
     /**
      * Is called if a subscribed state changes
      */
     onStateChange(id, state) {
-        // this.subscribeStates('on');
-        // this.subscribeStates('userMode');
-        // this.subscribeStates('fanSpeed');
-        // this.subscribeStates('position');
-        // this.subscribeStates('userSetpoint');
-        // this.subscribeStates('remoteDisable');
+        // When the value changes and aks ist false - it is a user interaction. We need to send the change to the aircon!
         if (state && !state.ack) {
             const adapterId = id.replace(this.namespace + '.', '');
             this.sendInformation(adapterId, state.val);
-            this.log.info(`state ${id} changed: ${JSON.stringify(state)}`);
-        }
-        else {
-            // The state was deleted
-            this.log.info(`state ${id} deleted`);
+            this.log.info(`state '${id}' new value: ${state.val}`);
         }
     }
-    // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-    // /**
-    //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-    //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-    //  */
-    // private onMessage(obj: ioBroker.Message): void {
-    //     if (typeof obj === 'object' && obj.message) {
-    //         if (obj.command === 'send') {
-    //             // e.g. send email or pushover or whatever
-    //             this.log.info('send command');
-    //             // Send response in callback if required
-    //             if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-    //         }
-    //     }
-    // }
     // eslint-disable-next-line @typescript-eslint/ban-types
     async sendAircon(cmd) {
         try {
