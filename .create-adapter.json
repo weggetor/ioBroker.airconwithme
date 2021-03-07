@@ -1,0 +1,39 @@
+{
+    "cli": true,
+    "adapterName": "airconwithme",
+    "title": "AirConWithMe",
+    "description": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+    "keywords": [
+        "iobroker adapter aircondition"
+    ],
+    "expert": "yes",
+    "features": [
+        "adapter"
+    ],
+    "adminFeatures": [
+        "tab",
+        "custom"
+    ],
+    "type": "climate-control",
+    "startMode": "daemon",
+    "connectionType": "local",
+    "dataSource": "poll",
+    "connectionIndicator": "no",
+    "language": "TypeScript",
+    "adminReact": "no",
+    "tools": [
+        "ESLint"
+    ],
+    "indentation": "Space (4)",
+    "quotes": "single",
+    "es6class": "yes",
+    "authorName": "weggetor",
+    "authorGithub": "weggetor",
+    "authorEmail": "info@bitboxx.net",
+    "gitRemoteProtocol": "HTTPS",
+    "gitCommit": "no",
+    "license": "MIT License",
+    "ci": "gh-actions",
+    "dependabot": "yes",
+    "creatorVersion": "1.31.0"
+}

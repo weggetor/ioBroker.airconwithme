@@ -1,0 +1,93 @@
+{
+    "common": {
+        "name": "airconwithme",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "AirConWithMe",
+        "titleLang": {
+            "en": "AirConWithMe",
+            "de": "AirConWithMe",
+            "ru": "AirConWithMe",
+            "pt": "AirConWithMe",
+            "nl": "AirConWithMe",
+            "fr": "AirConWithMe",
+            "it": "AirConWithMe",
+            "es": "AirConWithMe",
+            "pl": "AirConWithMe",
+            "zh-cn": "AirConWithMe"
+        },
+        "desc": {
+            "en": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+            "de": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+            "ru": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+            "pt": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+            "nl": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+            "fr": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+            "it": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+            "es": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+            "pl": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+            "zh-cn": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter"
+        },
+        "authors": [
+            "weggetor <info@bitboxx.net>"
+        ],
+        "keywords": [
+            "iobroker adapter aircondition"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "build/main.js",
+        "icon": "airconwithme.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/weggetor/ioBroker.airconwithme/master/admin/airconwithme.png",
+        "readme": "https://github.com/weggetor/ioBroker.airconwithme/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "climate-control",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "materialize": true,
+        "materializeTab": true,
+        "adminTab": {
+            "singleton": true,
+            "name": {
+                "en": "AirConWithMe",
+                "de": "AirConWithMe",
+                "ru": "AirConWithMe",
+                "pt": "AirConWithMe",
+                "nl": "AirConWithMe",
+                "fr": "AirConWithMe",
+                "it": "AirConWithMe",
+                "es": "AirConWithMe",
+                "pl": "AirConWithMe",
+                "zh-cn": "AirConWithMe"
+            },
+            "link": "",
+            "fa-icon": "info"
+        },
+        "supportCustoms": true,
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
+            }
+        ]
+    },
+    "native": {
+    },
+    "objects": [],
+    "instanceObjects": []
+}

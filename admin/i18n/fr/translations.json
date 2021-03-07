@@ -1,0 +1,6 @@
+{
+    "airconwithme adapter settings": "Paramètres d'adaptateur pour airconwithme",
+    "ipaddress": "Adresse IP",
+    "password": "Mot de passe de connexion Intesis (par défaut: admin)",
+    "username": "Nom d'utilisateur Login Intesis (par défaut: admin)"
+}
