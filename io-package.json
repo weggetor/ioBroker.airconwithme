@@ -14,6 +14,18 @@
                 "es": "Versión inicial",
                 "pl": "Pierwsze wydanie",
                 "zh-cn": "首次出版"
+            },
+            "0.0.2": {
+                "en": "Some minor fixes to build pipeline",
+                "de": "Einige kleinere Korrekturen zum Erstellen der Pipeline",
+                "ru": "Некоторые мелкие исправления для сборки конвейера",
+                "pt": "Algumas pequenas correções para construir pipeline",
+                "nl": "Enkele kleine fixes om een ​​pijplijn te bouwen",
+                "fr": "Quelques corrections mineures pour créer un pipeline",
+                "it": "Alcune correzioni minori per costruire la pipeline",
+                "es": "Algunas correcciones menores para construir una canalización",
+                "pl": "Kilka drobnych poprawek do budowy potoku",
+                "zh-cn": "一些较小的修复程序来构建管道"
             }
         },
         "title": "AirConWithMe",
@@ -86,8 +98,7 @@
             }
         ]
     },
-    "native": {
-    },
+    "native": {},
     "objects": [],
     "instanceObjects": []
 }

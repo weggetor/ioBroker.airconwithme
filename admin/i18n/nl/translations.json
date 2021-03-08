@@ -1,4 +1,7 @@
 {
+    "IP Address of the Mitsubishi WLAN adapter": "IP-adres van de Mitsubishi WLAN-adapter",
+    "Password for login on adapter website (default:admin)": "Wachtwoord voor inloggen op adapterwebsite (standaard: admin)",
+    "Username for login on adapter website (default:admin)": "Gebruikersnaam voor inloggen op adapterwebsite (standaard: admin)",
     "airconwithme adapter settings": "Adapterinstellingen voor airconwithme",
     "ipaddress": "IP adres",
     "password": "Wachtwoord Login Intesis (Standaard: admin)",

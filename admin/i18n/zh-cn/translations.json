@@ -1,4 +1,7 @@
 {
+    "IP Address of the Mitsubishi WLAN adapter": "三菱WLAN适配器的IP地址",
+    "Password for login on adapter website (default:admin)": "适配器网站登录密码（默认：admin）",
+    "Username for login on adapter website (default:admin)": "适配器网站上登录的用户名（默认：admin）",
     "airconwithme adapter settings": "airconwithme的适配器设置",
     "ipaddress": "IP地址",
     "password": "密码登录名（默认值：admin）",
