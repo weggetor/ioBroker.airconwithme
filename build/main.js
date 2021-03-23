@@ -55,7 +55,8 @@ class Airconwithme extends utils.Adapter {
             { uid: 1, name: 'on', caption: 'On / Off', states: '0:Off;1:On', type: 1 },
             { uid: 2, name: 'userMode', caption: 'User Mode', states: '0:Auto;1:Heat;2:Dry;3:Fan;4:Cool', type: 1 },
             { uid: 4, name: 'fanSpeed', caption: 'Fan Speed', states: '1:Speed 1;2:Speed 2;3:Speed 3;4:Speed 4', type: 1 },
-            { uid: 5, name: 'position', caption: 'Vane Up/Down Position', states: '1:Position 1;2:Position 2;3:Position 3;4:Position 4;10:Swing', type: 1 },
+            { uid: 5, name: 'positionV', caption: 'Vane Up/Down Position', states: '1:Position 1;2:Position 2;3:Position 3;4:Position 4;10:Swing', type: 1 },
+            { uid: 6, name: 'positionH', caption: 'Vane Left/Right Position', states: '1:Position 1;2:Position 2;3:Position 3,4:Position 4;10:Swing', type: 1},
             { uid: 9, name: 'userSetpoint', caption: 'User Setpoint', type: 2 },
             { uid: 10, name: 'returnPathTemp', caption: 'Return Path Temperature', type: 2 },
             { uid: 12, name: 'remoteDisable', caption: 'Remote Disable', states: '0:Enable;1:Disable', type: 1 },
@@ -112,7 +113,8 @@ class Airconwithme extends utils.Adapter {
         this.subscribeStates('on');
         this.subscribeStates('userMode');
         this.subscribeStates('fanSpeed');
-        this.subscribeStates('position');
+        this.subscribeStates('positionV');
+        this.subscribeStates('positionH');
         this.subscribeStates('userSetpoint');
         this.subscribeStates('remoteDisable');
         // Now we refresh our values every 60 seconds
