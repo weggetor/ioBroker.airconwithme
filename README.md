@@ -33,6 +33,7 @@ Most datapoints are readonly, you can set the following:
 | userSetpoint | temperature (°C) |
 | remoteDisable | 0: Enable; 1: Disable |
 
+
 ## Changelog
 
 ### 0.0.2
