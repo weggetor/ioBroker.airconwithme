@@ -28,7 +28,8 @@ Most datapoints are readonly, you can set the following:
 | on | 0: Off; 1: On |
 | userMode | 0: Auto; 1: Heat; 2: Dry; 3: Fan; 4: Cool |
 | fanSpeed | 1: Speed 1; 2: Speed 2; 3: Speed 3; 4: Speed 4 |
-| position | 1: Position 1; 2: Position 2; 3: Position 3; 4: Position 4; 10: Swing |
+| positionV | 1: Position 1; 2: Position 2; 3: Position 3; 4: Position 4; 10: Swing |
+| positionH | 1: Position 1; 2: Position 2; 3: Position 3; 4: Position 4; 10: Swing |
 | userSetpoint | temperature (°C) |
 | remoteDisable | 0: Enable; 1: Disable |
 
