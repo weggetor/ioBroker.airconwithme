@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "airconwithme",
-        "version": "0.0.2",
+        "version": "0.0.3",
         "news": {
             "0.0.1": {
                 "en": "initial release",
@@ -54,7 +54,7 @@
             "zh-cn": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter"
         },
         "authors": [
-            "weggetor <info@bitboxx.net>"
+            "Torsten Weggen <weggen@bitboxx.net>"
         ],
         "keywords": [
             "iobroker adapter aircondition mitsubishi"
@@ -74,23 +74,6 @@
         "dataSource": "poll",
         "materialize": true,
         "materializeTab": true,
-        "adminTab": {
-            "singleton": true,
-            "name": {
-                "en": "AirConWithMe",
-                "de": "AirConWithMe",
-                "ru": "AirConWithMe",
-                "pt": "AirConWithMe",
-                "nl": "AirConWithMe",
-                "fr": "AirConWithMe",
-                "it": "AirConWithMe",
-                "es": "AirConWithMe",
-                "pl": "AirConWithMe",
-                "zh-cn": "AirConWithMe"
-            },
-            "link": "",
-            "fa-icon": "info"
-        },
         "supportCustoms": true,
         "dependencies": [
             {

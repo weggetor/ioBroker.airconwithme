@@ -33,6 +33,8 @@ Most datapoints are readonly, you can set the following:
 | remoteDisable | 0: Enable; 1: Disable |
 
 ## Changelog
+### 0.0.3
+* (weggetor) Renamed some variables to avoid possible interference with other adapters, removed not used adminTab
 
 ### 0.0.2
 * (weggetor) Modifications to automatic build incl. upload to npm

@@ -5,8 +5,8 @@ import axios from 'axios';
 class Airconwithme extends utils.Adapter {
 
     private baseUrl = '';
-    private infoInterval:any = null;
-    private infoMetadata = [
+    private awmInfoInterval:any = null;
+    private awmInfoMetadata = [
         {name: 'wlanSTAMAC', type: 'string', role:'state', caption: 'Device Client MAC Address'},
         {name: 'wlanAPMAC', type: 'string', role:'state', caption: 'Device Access Point MAC Address'},
         {name: 'ownSSID', type: 'string', role:'state', caption: 'Device Access Point SSID'},
@@ -26,7 +26,7 @@ class Airconwithme extends utils.Adapter {
         {name: 'lastError', type: 'number', role:'state', caption: 'Last Error'}
     ]
 
-    private dpMetadata = [
+    private awnDpMetadata = [
         {uid: 1, name: 'on', caption: 'On / Off', states: '0:Off;1:On', type: 1},
         {uid: 2, name: 'userMode', caption: 'User Mode', states: '0:Auto;1:Heat;2:Dry;3:Fan;4:Cool', type: 1},
         {uid: 4, name: 'fanSpeed', caption: 'Fan Speed', states: '1:Speed 1;2:Speed 2;3:Speed 3;4:Speed 4', type: 1},
@@ -78,7 +78,7 @@ class Airconwithme extends utils.Adapter {
         });
 
         // Now we create all informational datapoints of the aircon
-        for (const infoProp of this.infoMetadata) {
+        for (const infoProp of this.awmInfoMetadata) {
             await this.setObjectNotExistsAsync('info.' + infoProp.name, {
                 type: 'state',
                 common: {
@@ -93,7 +93,7 @@ class Airconwithme extends utils.Adapter {
         }
 
         // Now we read all available informations from the aircon (incl. creating other datapoints like set Temperatur etc.) and setting the values
-        this.readInformation();
+        this.awnReadInformation();
 
         // We subscribe on these datapoints to let them change by user interaction
         this.subscribeStates('on');
@@ -105,8 +105,8 @@ class Airconwithme extends utils.Adapter {
 
 
         // Now we refresh our values every 60 seconds
-        this.infoInterval = setInterval(async () => {
-            this.readInformation();
+        this.awmInfoInterval = setInterval(async () => {
+            this.awnReadInformation();
         }, 60000);
     }
 
@@ -115,7 +115,7 @@ class Airconwithme extends utils.Adapter {
      */
     private onUnload(callback: () => void): void {
         try {
-            clearInterval(this.infoInterval);
+            clearInterval(this.awmInfoInterval);
             callback();
         } catch (e) {
             callback();
@@ -130,7 +130,7 @@ class Airconwithme extends utils.Adapter {
         // When the value changes and aks ist false - it is a user interaction. We need to send the change to the aircon!
         if (state && !state.ack) {
             const adapterId = id.replace (this.namespace + '.','');
-            this.sendInformation(adapterId, state.val)
+            this.awmSendInformation(adapterId, state.val)
             this.log.info(`state '${id}' new value: ${state.val}`);
         }
     }
@@ -146,7 +146,7 @@ class Airconwithme extends utils.Adapter {
         }
     }
 
-    private async readInformation(): Promise<void> {
+    private async awnReadInformation(): Promise<void> {
         let response = await this.sendAircon({command: 'login', data: {username: 'admin', password: 'admin'}});
         let sessionID = ''
         if (response && response.success) {
@@ -177,7 +177,7 @@ class Airconwithme extends utils.Adapter {
         if (response && response.success) {
             const availableDatapoints = response.data.dp.datapoints;
             for (const dp of availableDatapoints) {
-                const dpMeta = this.dpMetadata.find((t: { uid: number; }) => t.uid === dp.uid)
+                const dpMeta = this.awnDpMetadata.find((t: { uid: number; }) => t.uid === dp.uid)
                 if (dpMeta !== null) {
                     const dpObj: any = {};
                     dpObj.type= 'state';
@@ -216,7 +216,7 @@ class Airconwithme extends utils.Adapter {
         if (response && response.success) {
             const datapointValues = response.data.dpval;
             for (const dpv of datapointValues) {
-                const dpMeta = this.dpMetadata.find((t: { uid: number; }) => t.uid === dpv.uid)
+                const dpMeta = this.awnDpMetadata.find((t: { uid: number; }) => t.uid === dpv.uid)
                 let value = dpv.value;
                 if (dpMeta) {
                     if (dpMeta?.type === 2) {
@@ -234,7 +234,7 @@ class Airconwithme extends utils.Adapter {
         await this.sendAircon({command:'logout',data:{sessionID:sessionID}});
     }
 
-    private async sendInformation(id: string, value: any): Promise<void> {
+    private async awmSendInformation(id: string, value: any): Promise<void> {
         let response = await this.sendAircon({command: 'login', data: {username: 'admin', password: 'admin'}});
         let sessionID = ''
         if (response && response.success) {
@@ -242,7 +242,7 @@ class Airconwithme extends utils.Adapter {
         } else {
             this.log.error('Login fehlgeschlagen !');
         }
-        const dpMeta = this.dpMetadata.find((t: { name: string; }) => t.name === id);
+        const dpMeta = this.awnDpMetadata.find((t: { name: string; }) => t.name === id);
         if (dpMeta) {
             let translatedVal = value;
             if (dpMeta.type === 2) {

@@ -1,10 +1,10 @@
 {
   "name": "iobroker.airconwithme",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
   "author": {
-    "name": "weggetor",
-    "email": "info@bitboxx.net"
+    "name": "Torsten Weggen",
+    "email": "weggen@bitboxx.net"
   },
   "homepage": "https://github.com/weggetor/ioBroker.airconwithme",
   "license": "MIT",
@@ -57,7 +57,8 @@
     "test:integration": "mocha test/integration --exit",
     "test": "npm run test:ts && npm run test:package",
     "check": "tsc --noEmit",
-    "lint": "eslint --ext .ts src/"
+    "lint": "eslint --ext .ts src/",
+    "translate": "gulp translateAndUpdateWordsJS"
   },
   "bugs": {
     "url": "https://github.com/weggetor/ioBroker.airconwithme/issues"
