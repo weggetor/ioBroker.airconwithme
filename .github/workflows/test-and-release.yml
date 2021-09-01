@@ -35,10 +35,7 @@ jobs:
 
             - name: Install Dependencies
               run: npm ci
-            - name: Perform a type check
-              run: npm run build:ts -- --noEmit
-              env:
-                  CI: true
+
             - name: Lint source code
               run: npm run lint
             - name: Test package files
@@ -120,11 +117,6 @@ jobs:
                  BODY="${BODY//$'\r'/'%0D'}"
                  echo "::set-output name=BODY::$BODY"
 
-           - name: Install Dependencies
-             run: npm ci
-           - name: Create a clean build
-             run: npm run build
-
            - name: Publish package to npm
              run: |
                  npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
@@ -142,3 +134,22 @@ jobs:
                  # Prerelease versions create prereleases on Github
                  prerelease: ${{ contains(steps.extract_release.outputs.VERSION, '-') }}
                  body: ${{ steps.extract_release.outputs.BODY }}
+
+           # When using Sentry for error reporting, Sentry could be informed about new releases
+           # To enable create a API-Token in Sentry (User settings, API keys)
+           # Enter this token as a GitHub secret (with name SENTRY_AUTH_TOKEN) in the repository options
+           # Then uncomment and customize the following block:
+           #- name: Notify Sentry.io about the release
+           #  run: |
+           #      npm i -g @sentry/cli
+           #      export SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+           #      export SENTRY_URL=https://sentry.iobroker.net
+           #      export SENTRY_ORG=iobroker
+           #      export SENTRY_PROJECT=iobroker-test-adapter
+           #      export SENTRY_VERSION=iobroker.test-adapter@${{ steps.extract_release.outputs.VERSION }}
+           #      sentry-cli releases new $SENTRY_VERSION
+           #      sentry-cli releases finalize $SENTRY_VERSION
+           #      # Add the following line BEFORE finalize if repositories are connected in Sentry
+           #      #sentry-cli releases set-commits $SENTRY_VERSION --auto
+           #      # Add the following line BEFORE finalize if sourcemap uploads are needed
+           #      #sentry-cli releases files $SENTRY_VERSION upload-sourcemaps build/
