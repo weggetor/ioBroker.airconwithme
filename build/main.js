@@ -156,7 +156,7 @@ class Airconwithme extends utils.Adapter {
     }
     async awnReadInformation() {
         var _a, _b, _c;
-        let response = await this.sendAircon({ command: 'login', data: { username: 'admin', password: 'admin' } });
+        let response = await this.sendAircon({ command: 'login', data: { username: this.config.username, password: this.config.password } });
         let sessionID = '';
         if (response && response.success) {
             sessionID = response.data.id.sessionID;
@@ -242,7 +242,7 @@ class Airconwithme extends utils.Adapter {
         await this.sendAircon({ command: 'logout', data: { sessionID: sessionID } });
     }
     async awmSendInformation(id, value) {
-        let response = await this.sendAircon({ command: 'login', data: { username: 'admin', password: 'admin' } });
+        let response = await this.sendAircon({ command: 'login', data: { username: this.config.username, password: this.config.password } });
         let sessionID = '';
         if (response && response.success) {
             sessionID = response.data.id.sessionID;

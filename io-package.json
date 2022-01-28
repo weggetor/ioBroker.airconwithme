@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "airconwithme",
-        "version": "0.0.3",
+        "version": "0.0.4",
         "news": {
             "0.0.1": {
                 "en": "initial release",
@@ -26,6 +26,30 @@
                 "es": "Algunas correcciones menores para construir una canalización",
                 "pl": "Kilka drobnych poprawek do budowy potoku",
                 "zh-cn": "一些较小的修复程序来构建管道"
+            },
+            "0.0.3": {
+                "en": "Some minor fixes to build pipeline",
+                "de": "Einige kleinere Korrekturen zum Erstellen der Pipeline",
+                "ru": "Некоторые мелкие исправления для сборки конвейера",
+                "pt": "Algumas pequenas correções para construir pipeline",
+                "nl": "Enkele kleine fixes om een ​​pijplijn te bouwen",
+                "fr": "Quelques corrections mineures pour créer un pipeline",
+                "it": "Alcune correzioni minori per costruire la pipeline",
+                "es": "Algunas correcciones menores para construir una canalización",
+                "pl": "Kilka drobnych poprawek do budowy potoku",
+                "zh-cn": "一些较小的修复程序来构建管道"
+            },
+            "0.0.4": {
+                "en": "Bugfix username and password",
+                "de": "Bugfix Benutzername und Passwort",
+                "ru": "Исправлено имя пользователя и пароль",
+                "pt": "Correção de usuário e senha",
+                "nl": "Gebruikersnaam en wachtwoord voor bugfix",
+                "fr": "Nom d'utilisateur et mot de passe de correction de bogue",
+                "it": "Nome utente e password corretti per bug",
+                "es": "Corrección de errores de nombre de usuario y contraseña",
+                "pl": "Nazwa użytkownika i hasło do naprawy błędów",
+                "zh-cn": "修正用户名和密码"
             }
         },
         "title": "AirConWithMe",

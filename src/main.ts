@@ -140,14 +140,14 @@ class Airconwithme extends utils.Adapter {
         try {
             const resp = await axios.post(this.baseUrl, cmd);
             return resp.data;
-        } catch (err) {
+        } catch (err:any) {
             this.log.error(err);
             return null;
         }
     }
 
     private async awnReadInformation(): Promise<void> {
-        let response = await this.sendAircon({command: 'login', data: {username: 'admin', password: 'admin'}});
+        let response = await this.sendAircon({command: 'login', data: {username: this.config.username, password: this.config.password}});
         let sessionID = ''
         if (response && response.success) {
             sessionID = response.data.id.sessionID;
@@ -235,7 +235,7 @@ class Airconwithme extends utils.Adapter {
     }
 
     private async awmSendInformation(id: string, value: any): Promise<void> {
-        let response = await this.sendAircon({command: 'login', data: {username: 'admin', password: 'admin'}});
+        let response = await this.sendAircon({command: 'login', data: {username: this.config.username, password: this.config.password}});
         let sessionID = ''
         if (response && response.success) {
             sessionID = response.data.id.sessionID;
