@@ -97,8 +97,8 @@
         "connectionType": "local",
         "dataSource": "poll",
         "materialize": true,
-        "materializeTab": true,
-        "supportCustoms": true,
+        "materializeTab": false,
+        "supportCustoms": false,
         "dependencies": [
             {
                 "js-controller": ">=2.0.0"
