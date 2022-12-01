@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@iobroker/testing": "^2.6.0",
-    "@types/chai": "^4.3.3",
+    "@types/chai": "^4.3.4",
     "@types/chai-as-promised": "^7.1.5",
     "@types/gulp": "^4.0.10",
     "@types/mocha": "^10.0.1",
@@ -31,7 +31,7 @@
     "@types/sinon-chai": "^3.2.9",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
-    "chai": "^4.3.6",
+    "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.28.0",
     "gulp": "^4.0.2",
