@@ -91,6 +91,7 @@
         "extIcon": "https://raw.githubusercontent.com/weggetor/ioBroker.airconwithme/master/admin/airconwithme.png",
         "readme": "https://github.com/weggetor/ioBroker.airconwithme/blob/master/README.md",
         "loglevel": "info",
+        "tier": 2,
         "mode": "daemon",
         "type": "climate-control",
         "compact": true,
