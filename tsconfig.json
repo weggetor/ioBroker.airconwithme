@@ -30,12 +30,11 @@
         // "noUnusedLocals": true,
         // "noUnusedParameters": true,
 
-        // Consider targetting es2019 or higher if you only support Node.js 12+
-        "target": "es2018",
+        // Target ES2020 for better compatibility
+        "target": "es2020",
 
         "sourceMap": false,
-        "inlineSourceMap": false,
-        "watch": false
+        "inlineSourceMap": false
     },
     "include": [
         "src/**/*.ts",

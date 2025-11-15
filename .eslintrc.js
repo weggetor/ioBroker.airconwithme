@@ -2,14 +2,14 @@ module.exports = {
     root: true, // Don't look outside this project for inherited configs
     parser: '@typescript-eslint/parser', // Specifies the ESLint parser
     parserOptions: {
-        ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
+        ecmaVersion: 2020, // Updated for modern ECMAScript features
         sourceType: 'module', // Allows for the use of imports
         project: './tsconfig.json',
     },
     extends: [
         'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
     ],
-    plugins: [],
+    plugins: ['@typescript-eslint'],
     rules: {
         'indent': 'off',
         '@typescript-eslint/indent': [
@@ -51,8 +51,7 @@ module.exports = {
                 allowTypedFunctionExpressions: true,
             },
         ],
-        '@typescript-eslint/no-object-literal-type-assertion': 'off',
-        '@typescript-eslint/interface-name-prefix': 'off',
+        '@typescript-eslint/consistent-type-assertions': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off', // This is necessary for Map.has()/get()!
         'no-var': 'error',
         'prefer-const': 'error',

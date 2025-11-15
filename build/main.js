@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -32,6 +36,10 @@ class Airconwithme extends utils.Adapter {
         });
         this.baseUrl = '';
         this.awmInfoInterval = null;
+        this.currentSessionId = null;
+        this.sessionExpiryTime = 0;
+        this.sessionDurationMs = 5 * 60 * 1000; // 5 minutes
+        this.requestTimeoutMs = 10000; // 10 seconds
         this.awmInfoMetadata = [
             { name: 'wlanSTAMAC', type: 'string', role: 'state', caption: 'Device Client MAC Address' },
             { name: 'wlanAPMAC', type: 'string', role: 'state', caption: 'Device Access Point MAC Address' },
@@ -75,196 +83,364 @@ class Airconwithme extends utils.Adapter {
         this.on('unload', this.onUnload.bind(this));
     }
     /**
+     * Validates the adapter configuration
+     */
+    validateConfiguration() {
+        const config = this.config;
+        if (!config.ipaddress) {
+            this.log.error('No IP address configured. Please check adapter configuration.');
+            return false;
+        }
+        if (!config.username || !config.password) {
+            this.log.warn('No username/password configured. Using default credentials (admin/admin).');
+            config.username = config.username || 'admin';
+            config.password = config.password || 'admin';
+        }
+        // Validate IP address format
+        const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        if (!ipRegex.test(config.ipaddress)) {
+            this.log.error(`Invalid IP address format: ${config.ipaddress}`);
+            return false;
+        }
+        return true;
+    }
+    /**
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
-        this.log.info('config ipaddress: ' + this.config.ipaddress);
-        this.baseUrl = 'http://' + this.config.ipaddress + '/api.cgi';
-        // We need a datapoint for reachability of our aircondition
-        await this.setObjectNotExistsAsync('reachable', {
-            type: 'state',
-            common: {
-                name: 'reachable',
-                type: 'boolean',
-                role: 'indicator.reachable',
-                read: true,
-                write: false
-            },
-            native: {},
-        });
-        // Now we create all informational datapoints of the aircon
-        for (const infoProp of this.awmInfoMetadata) {
-            await this.setObjectNotExistsAsync('info.' + infoProp.name, {
+        try {
+            if (!this.validateConfiguration()) {
+                return;
+            }
+            this.log.info(`Connecting to air conditioner at: ${this.config.ipaddress}`);
+            this.baseUrl = `http://${this.config.ipaddress}/api.cgi`;
+            // Create reachability datapoint
+            await this.setObjectNotExistsAsync('reachable', {
                 type: 'state',
                 common: {
-                    name: infoProp.caption,
-                    type: (infoProp.type === 'string' ? 'string' : 'number'),
-                    role: infoProp.role,
+                    name: 'reachable',
+                    type: 'boolean',
+                    role: 'indicator.reachable',
                     read: true,
                     write: false
                 },
                 native: {},
             });
+            // Create informational datapoints
+            for (const infoProp of this.awmInfoMetadata) {
+                await this.setObjectNotExistsAsync(`info.${infoProp.name}`, {
+                    type: 'state',
+                    common: {
+                        name: infoProp.caption,
+                        type: infoProp.type,
+                        role: infoProp.role,
+                        read: true,
+                        write: false
+                    },
+                    native: {},
+                });
+            }
+            // Read initial device information and create datapoints
+            await this.refreshDeviceInformation();
+            // Subscribe to controllable states
+            this.subscribeStates('on');
+            this.subscribeStates('userMode');
+            this.subscribeStates('fanSpeed');
+            this.subscribeStates('position');
+            this.subscribeStates('userSetpoint');
+            this.subscribeStates('remoteDisable');
+            // Set up periodic data refresh (60 seconds)
+            this.awmInfoInterval = setInterval(async () => {
+                await this.refreshDeviceInformation();
+            }, 60000);
+            this.log.info('Adapter initialization completed successfully');
         }
-        // Now we read all available informations from the aircon (incl. creating other datapoints like set Temperatur etc.) and setting the values
-        this.awnReadInformation();
-        // We subscribe on these datapoints to let them change by user interaction
-        this.subscribeStates('on');
-        this.subscribeStates('userMode');
-        this.subscribeStates('fanSpeed');
-        this.subscribeStates('position');
-        this.subscribeStates('userSetpoint');
-        this.subscribeStates('remoteDisable');
-        // Now we refresh our values every 60 seconds
-        this.awmInfoInterval = setInterval(async () => {
-            this.awnReadInformation();
-        }, 60000);
+        catch (error) {
+            this.log.error(`Failed to initialize adapter: ${error}`);
+        }
     }
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      */
     onUnload(callback) {
         try {
-            clearInterval(this.awmInfoInterval);
+            if (this.awmInfoInterval) {
+                clearInterval(this.awmInfoInterval);
+                this.awmInfoInterval = null;
+            }
+            if (this.currentSessionId) {
+                this.logout().catch(() => { });
+            }
             callback();
         }
-        catch (e) {
+        catch (error) {
+            this.log.error(`Error during unload: ${error}`);
             callback();
         }
     }
     /**
      * Is called if a subscribed state changes
      */
-    onStateChange(id, state) {
-        // When the value changes and aks ist false - it is a user interaction. We need to send the change to the aircon!
-        if (state && !state.ack) {
-            const adapterId = id.replace(this.namespace + '.', '');
-            this.awmSendInformation(adapterId, state.val);
-            this.log.info(`state '${id}' new value: ${state.val}`);
+    async onStateChange(id, state) {
+        if (!state || state.ack) {
+            return; // Ignore acknowledged states
+        }
+        try {
+            const adapterId = id.replace(`${this.namespace}.`, '');
+            if (!this.isValidStateId(adapterId)) {
+                this.log.warn(`Received state change for unknown datapoint: ${adapterId}`);
+                return;
+            }
+            this.log.info(`User changed state '${adapterId}' to: ${state.val}`);
+            await this.sendDeviceCommand(adapterId, state.val);
+        }
+        catch (error) {
+            this.log.error(`Failed to process state change for '${id}': ${error}`);
         }
     }
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    async sendAircon(cmd) {
-        try {
-            const resp = await axios_1.default.post(this.baseUrl, cmd);
-            return resp.data;
+    /**
+     * Validates if the state ID is a known controllable datapoint
+     */
+    isValidStateId(stateId) {
+        const validStates = ['on', 'userMode', 'fanSpeed', 'position', 'userSetpoint', 'remoteDisable'];
+        return validStates.includes(stateId);
+    }
+    /**
+     * Gets a valid session ID, logging in if necessary
+     */
+    async getValidSession() {
+        const now = Date.now();
+        // Check if current session is still valid
+        if (this.currentSessionId && now < this.sessionExpiryTime) {
+            return this.currentSessionId;
         }
-        catch (err) {
-            this.log.error(err);
+        // Need to login
+        const response = await this.sendAirconCommand({
+            command: 'login',
+            data: {
+                username: this.config.username || 'admin',
+                password: this.config.password || 'admin'
+            }
+        });
+        if (response?.success && response.data?.id?.sessionID) {
+            this.currentSessionId = response.data.id.sessionID;
+            this.sessionExpiryTime = now + this.sessionDurationMs;
+            this.log.debug('Successfully logged in to air conditioner');
+            return this.currentSessionId;
+        }
+        this.log.error('Login failed - invalid credentials or device not responding');
+        this.currentSessionId = null;
+        return null;
+    }
+    /**
+     * Logs out from the current session
+     */
+    async logout() {
+        if (!this.currentSessionId) {
+            return;
+        }
+        try {
+            await this.sendAirconCommand({
+                command: 'logout',
+                data: { sessionID: this.currentSessionId }
+            });
+        }
+        catch (error) {
+            this.log.debug(`Logout error (ignored): ${error}`);
+        }
+        finally {
+            this.currentSessionId = null;
+            this.sessionExpiryTime = 0;
+        }
+    }
+    /**
+     * Sends a command to the air conditioner API
+     */
+    async sendAirconCommand(command) {
+        try {
+            const response = await axios_1.default.post(this.baseUrl, command, {
+                timeout: this.requestTimeoutMs,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'User-Agent': 'ioBroker.airconwithme'
+                }
+            });
+            if (response.status !== 200) {
+                this.log.error(`HTTP error: ${response.status} ${response.statusText}`);
+                return null;
+            }
+            return response.data;
+        }
+        catch (error) {
+            if (error.code === 'ECONNREFUSED') {
+                this.log.error('Cannot connect to air conditioner. Please check IP address and network connectivity.');
+            }
+            else if (error.code === 'ETIMEDOUT') {
+                this.log.error('Request timeout. Air conditioner is not responding.');
+            }
+            else {
+                this.log.error(`API request failed: ${error.message}`);
+            }
             return null;
         }
     }
-    async awnReadInformation() {
-        var _a, _b, _c;
-        let response = await this.sendAircon({ command: 'login', data: { username: this.config.username, password: this.config.password } });
-        let sessionID = '';
-        if (response && response.success) {
-            sessionID = response.data.id.sessionID;
-            this.log.debug('SessionID ist: ' + sessionID);
+    /**
+     * Refreshes all device information and updates states
+     */
+    async refreshDeviceInformation() {
+        try {
+            const sessionID = await this.getValidSession();
+            if (!sessionID) {
+                await this.setStateAsync('reachable', { val: false, ack: true });
+                return;
+            }
             await this.setStateAsync('reachable', { val: true, ack: true });
+            // Read device information
+            await this.updateDeviceInfo(sessionID);
+            // Setup and update datapoints
+            await this.updateDatapoints(sessionID);
+            // Read current values
+            await this.updateDatapointValues(sessionID);
         }
-        else {
-            this.log.error('Login fehlgeschlagen !');
+        catch (error) {
+            this.log.error(`Failed to refresh device information: ${error}`);
             await this.setStateAsync('reachable', { val: false, ack: true });
-            return;
         }
-        response = await this.sendAircon({ command: 'getinfo', data: { 'sessionID': sessionID } });
-        if (response && response.success) {
+    }
+    /**
+     * Updates device information states
+     */
+    async updateDeviceInfo(sessionID) {
+        const response = await this.sendAirconCommand({
+            command: 'getinfo',
+            data: { sessionID }
+        });
+        if (response?.success && response.data?.info) {
             const infoData = response.data.info;
-            this.log.debug('infodata ist: ' + JSON.stringify(infoData));
-            for (const infoProp of Object.keys(infoData)) {
-                const val = infoData[infoProp];
-                await this.setStateAsync('info.' + infoProp, { val: val, ack: true });
+            this.log.debug(`Device info: ${JSON.stringify(infoData)}`);
+            for (const [key, value] of Object.entries(infoData)) {
+                await this.setStateAsync(`info.${key}`, { val: value, ack: true });
             }
         }
         else {
-            await this.setStateAsync('reachable', { val: false, ack: true });
-            this.log.error('GetInfo fehlgeschlagen !');
-            return;
+            throw new Error('Failed to get device information');
         }
-        response = await this.sendAircon({ command: 'getavailabledatapoints', data: { sessionID: sessionID, uid: 'all' } });
-        if (response && response.success) {
+    }
+    /**
+     * Updates available datapoints and creates corresponding ioBroker objects
+     */
+    async updateDatapoints(sessionID) {
+        const response = await this.sendAirconCommand({
+            command: 'getavailabledatapoints',
+            data: { sessionID, uid: 'all' }
+        });
+        if (response?.success && response.data?.dp?.datapoints) {
             const availableDatapoints = response.data.dp.datapoints;
             for (const dp of availableDatapoints) {
-                const dpMeta = this.awnDpMetadata.find((t) => t.uid === dp.uid);
-                if (dpMeta !== null) {
-                    const dpObj = {};
-                    dpObj.type = 'state';
-                    dpObj.common = {};
-                    dpObj.native = {};
-                    dpObj.common.name = dpMeta === null || dpMeta === void 0 ? void 0 : dpMeta.caption;
-                    dpObj.common.type = 'number';
-                    dpObj.common.role = 'state';
-                    if (dp.type == 2) {
-                        dpObj.common.role = 'value.temperature';
-                        dpObj.common.unit = '°C';
-                    }
-                    dpObj.common.read = dp.rw.includes('r');
-                    dpObj.common.write = dp.rw.includes('w');
-                    if (dpMeta === null || dpMeta === void 0 ? void 0 : dpMeta.states) {
-                        dpObj.common.states = dpMeta.states;
-                    }
-                    if ((_a = dp.descr) === null || _a === void 0 ? void 0 : _a.minValue) {
-                        dpObj.common.min = dp.descr.minValue / 10;
-                    }
-                    if ((_b = dp.descr) === null || _b === void 0 ? void 0 : _b.maxValue) {
-                        dpObj.common.max = dp.descr.maxValue / 10;
-                    }
-                    const id = (_c = dpMeta === null || dpMeta === void 0 ? void 0 : dpMeta.name) !== null && _c !== void 0 ? _c : dp.uid.toString();
-                    await this.setObjectNotExistsAsync(id, dpObj);
-                }
-            }
-        }
-        else {
-            await this.setStateAsync('reachable', { val: false, ack: true });
-            this.log.error('GetAvailableDatapoints fehlgeschlagen !');
-            return;
-        }
-        response = await this.sendAircon({ command: 'getdatapointvalue', data: { sessionID: sessionID, uid: 'all' } });
-        if (response && response.success) {
-            const datapointValues = response.data.dpval;
-            for (const dpv of datapointValues) {
-                const dpMeta = this.awnDpMetadata.find((t) => t.uid === dpv.uid);
-                let value = dpv.value;
+                const dpMeta = this.awnDpMetadata.find(meta => meta.uid === dp.uid);
                 if (dpMeta) {
-                    if ((dpMeta === null || dpMeta === void 0 ? void 0 : dpMeta.type) === 2) {
-                        value = value / 10;
-                    }
-                    await this.setStateAsync(dpMeta.name, { val: value, ack: true });
+                    await this.createDatapointObject(dp, dpMeta);
                 }
             }
         }
         else {
-            await this.setStateAsync('reachable', { val: false, ack: true });
-            console.log('Getdatapointvalues fehlgeschlagen !');
-            return;
+            throw new Error('Failed to get available datapoints');
         }
-        await this.sendAircon({ command: 'logout', data: { sessionID: sessionID } });
     }
-    async awmSendInformation(id, value) {
-        let response = await this.sendAircon({ command: 'login', data: { username: this.config.username, password: this.config.password } });
-        let sessionID = '';
-        if (response && response.success) {
-            sessionID = response.data.id.sessionID;
+    /**
+     * Creates an ioBroker object for a datapoint
+     */
+    async createDatapointObject(dp, meta) {
+        const objectDefinition = {
+            type: 'state',
+            common: {
+                name: meta.caption,
+                type: 'number',
+                role: dp.type === 2 ? 'value.temperature' : 'state',
+                read: dp.rw.includes('r'),
+                write: dp.rw.includes('w'),
+                ...(dp.type === 2 && { unit: '°C' }),
+                ...(meta.states && { states: meta.states }),
+                ...(dp.descr?.minValue && { min: dp.descr.minValue / 10 }),
+                ...(dp.descr?.maxValue && { max: dp.descr.maxValue / 10 })
+            },
+            native: {}
+        };
+        await this.setObjectNotExistsAsync(meta.name, objectDefinition);
+    }
+    /**
+     * Updates current datapoint values
+     */
+    async updateDatapointValues(sessionID) {
+        const response = await this.sendAirconCommand({
+            command: 'getdatapointvalue',
+            data: { sessionID, uid: 'all' }
+        });
+        if (response?.success && response.data?.dpval) {
+            for (const dpv of response.data.dpval) {
+                const meta = this.awnDpMetadata.find(m => m.uid === dpv.uid);
+                if (meta) {
+                    const value = meta.type === 2 ? dpv.value / 10 : dpv.value;
+                    await this.setStateAsync(meta.name, { val: value, ack: true });
+                }
+            }
         }
         else {
-            this.log.error('Login fehlgeschlagen !');
+            throw new Error('Failed to get datapoint values');
         }
-        const dpMeta = this.awnDpMetadata.find((t) => t.name === id);
-        if (dpMeta) {
-            let translatedVal = value;
-            if (dpMeta.type === 2) {
-                translatedVal = translatedVal * 10;
+    }
+    /**
+     * Sends a command to set a datapoint value on the device
+     */
+    async sendDeviceCommand(stateId, value) {
+        try {
+            const sessionID = await this.getValidSession();
+            if (!sessionID) {
+                throw new Error('Unable to get valid session');
             }
-            response = await this.sendAircon({ command: 'setdatapointvalue', data: { sessionID: sessionID, uid: dpMeta.uid, value: translatedVal } });
-            if (response && response.success) {
-                await this.setStateAsync(id, { val: value, ack: true });
+            const dpMeta = this.awnDpMetadata.find(meta => meta.name === stateId);
+            if (!dpMeta) {
+                throw new Error(`Unknown datapoint: ${stateId}`);
+            }
+            // Validate and transform value
+            const transformedValue = this.validateAndTransformValue(dpMeta, value);
+            if (transformedValue === null) {
+                throw new Error(`Invalid value for ${stateId}: ${value}`);
+            }
+            const response = await this.sendAirconCommand({
+                command: 'setdatapointvalue',
+                data: {
+                    sessionID,
+                    uid: dpMeta.uid,
+                    value: transformedValue
+                }
+            });
+            if (response?.success) {
+                await this.setStateAsync(stateId, { val: value, ack: true });
+                this.log.info(`Successfully set ${stateId} to ${value}`);
             }
             else {
-                this.log.error('SetDataPoint fehlgeschlagen !');
+                throw new Error(`Device rejected command for ${stateId}`);
             }
         }
-        await this.sendAircon({ command: 'logout', data: { sessionID: sessionID } });
+        catch (error) {
+            this.log.error(`Failed to set ${stateId} to ${value}: ${error}`);
+            throw error;
+        }
+    }
+    /**
+     * Validates and transforms a value for sending to the device
+     */
+    validateAndTransformValue(meta, value) {
+        if (value === null || value === undefined) {
+            return null;
+        }
+        const numValue = Number(value);
+        if (isNaN(numValue)) {
+            return null;
+        }
+        // Transform temperature values (multiply by 10 for device)
+        return meta.type === 2 ? Math.round(numValue * 10) : Math.round(numValue);
     }
 }
 if (module.parent) {
