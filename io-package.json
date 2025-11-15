@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "airconwithme",
-        "version": "0.0.4",
+        "version": "1.0.0",
         "news": {
+            "1.0.0": {
+                "en": "Major release: Complete code modernization, enhanced security, improved error handling, TypeScript migration, updated dependencies",
+                "de": "Major Release: Vollständige Code-Modernisierung, erweiterte Sicherheit, verbesserte Fehlerbehandlung, TypeScript-Migration, aktualisierte Abhängigkeiten",
+                "ru": "Мажорная версия: Полная модернизация кода, улучшенная безопасность, улучшенная обработка ошибок, миграция TypeScript, обновленные зависимости",
+                "pt": "Versão principal: Modernização completa do código, segurança aprimorada, tratamento de erros aprimorado, migração do TypeScript, dependências atualizadas",
+                "nl": "Grote release: Volledige codemodernisering, verbeterde beveiliging, verbeterde foutafhandeling, TypeScript-migratie, bijgewerkte afhankelijkheden",
+                "fr": "Version majeure : Modernisation complète du code, sécurité renforcée, gestion d'erreurs améliorée, migration TypeScript, dépendances mises à jour",
+                "it": "Versione principale: Modernizzazione completa del codice, sicurezza migliorata, gestione degli errori migliorata, migrazione TypeScript, dipendenze aggiornate",
+                "es": "Versión principal: Modernización completa del código, seguridad mejorada, manejo de errores mejorado, migración de TypeScript, dependencias actualizadas",
+                "pl": "Główne wydanie: Pełna modernizacja kodu, zwiększone bezpieczeństwo, ulepszona obsługa błędów, migracja TypeScript, zaktualizowane zależności",
+                "zh-cn": "主要版本：完整的代码现代化、增强的安全性、改进的错误处理、TypeScript迁移、更新的依赖项"
+            },
             "0.0.1": {
                 "en": "initial release",
                 "de": "Erstveröffentlichung",

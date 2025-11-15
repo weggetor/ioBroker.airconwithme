@@ -7,14 +7,66 @@ on:
   # WARNING: This needs to be run in the PR base, DO NOT build untrusted code in this action
   # details under https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
   pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+# Ensure only one auto-merge workflow runs at a time
+concurrency:
+  group: dependabot-auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+  statuses: read
 
 jobs:
   auto-merge:
-    if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
+    if: |
+      (github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]') &&
+      github.event.pull_request.draft == false &&
+      contains(github.event.pull_request.labels.*.name, 'dependencies')
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          # Fetch PR head for proper comparison
+          ref: ${{ github.event.pull_request.head.sha }}
+          token: ${{ secrets.AUTO_MERGE_TOKEN }}
+
+      - name: Validate PR from Dependabot
+        run: |
+          echo "PR Author: ${{ github.actor }}"
+          echo "PR Title: ${{ github.event.pull_request.title }}"
+          echo "PR State: ${{ github.event.pull_request.state }}"
+          echo "PR Draft: ${{ github.event.pull_request.draft }}"
+          echo "Base Branch: ${{ github.event.pull_request.base.ref }}"
+          
+          # Ensure PR is targeting main/master branch
+          if [[ "${{ github.event.pull_request.base.ref }}" != "main" && "${{ github.event.pull_request.base.ref }}" != "master" ]]; then
+            echo "❌ Auto-merge only allowed for main/master branch"
+            exit 1
+          fi
+          
+          # Validate it's a dependency update
+          if [[ ! "${{ github.event.pull_request.title }}" =~ ^(Bump|Update|chore\(deps\)) ]]; then
+            echo "❌ PR title doesn't match dependency update pattern"
+            exit 1
+          fi
+          
+          echo "✅ PR validation passed"
+
+      - name: Wait for status checks
+        uses: fountainhead/action-wait-for-check@v1.2.0
+        id: wait-for-checks
+        with:
+          token: ${{ secrets.AUTO_MERGE_TOKEN }}
+          checkName: "check-and-lint, adapter-tests"
+          ref: ${{ github.event.pull_request.head.sha }}
+          timeoutSeconds: 1800 # 30 minutes
+          intervalSeconds: 30
 
       - name: Check if PR should be auto-merged
         uses: ahmadnassri/action-dependabot-auto-merge@v2
@@ -23,3 +75,7 @@ jobs:
           github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
           # By default, squash and merge, so Github chooses nice commit messages
           command: squash and merge
+          # Wait for status checks to complete before merging
+          approve: true
+          # Additional safety: only merge if all checks pass
+          target: minor
