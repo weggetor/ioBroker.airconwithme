@@ -110,12 +110,15 @@
         "compact": true,
         "connectionType": "local",
         "dataSource": "poll",
+        "adminUI": {
+            "config": "index_m.html"
+        },
         "materialize": true,
         "materializeTab": false,
         "supportCustoms": false,
         "dependencies": [
             {
-                "js-controller": ">=5.0.19"
+                "js-controller": ">=6.0.11"
             }
         ],
         "globalDependencies": [
