@@ -95,7 +95,10 @@
         "keywords": [
             "iobroker adapter aircondition mitsubishi"
         ],
-        "license": "MIT",
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
         "platform": "Javascript/Node.js",
         "main": "build/main.js",
         "icon": "airconwithme.png",
