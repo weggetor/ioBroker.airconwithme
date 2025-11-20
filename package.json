@@ -9,7 +9,7 @@
   "homepage": "https://github.com/weggetor/ioBroker.airconwithme",
   "license": "MIT",
   "keywords": [
-    "ioBroker adapter aircondition"
+    "ioBroker", "adapter", "aircondition", "mitsubishi","airconwithme"
   ],
   "repository": {
     "type": "git",
