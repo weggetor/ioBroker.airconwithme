@@ -64,7 +64,6 @@
                 "zh-cn": "修正用户名和密码"
             }
         },
-        "title": "AirConWithMe",
         "titleLang": {
             "en": "AirConWithMe",
             "de": "AirConWithMe",
@@ -100,7 +99,6 @@
             "license": "MIT"
         },
         "platform": "Javascript/Node.js",
-        "main": "build/main.js",
         "icon": "airconwithme.png",
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/weggetor/ioBroker.airconwithme/master/admin/airconwithme.png",
@@ -117,7 +115,12 @@
         "supportCustoms": false,
         "dependencies": [
             {
-                "js-controller": ">=2.0.0"
+                "js-controller": ">=5.0.19"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.0.19"
             }
         ]
     },
