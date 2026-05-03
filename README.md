@@ -54,6 +54,8 @@ Most datapoints are readonly, you can set the following:
 ### 0.0.1
 * (weggetor) initial release
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 
