@@ -1,133 +1,132 @@
 {
-    "common": {
-        "name": "airconwithme",
-        "version": "1.0.0",
-        "news": {
-            "1.0.0": {
-                "en": "Major release: Complete code modernization, enhanced security, improved error handling, TypeScript migration, updated dependencies",
-                "de": "Major Release: Vollständige Code-Modernisierung, erweiterte Sicherheit, verbesserte Fehlerbehandlung, TypeScript-Migration, aktualisierte Abhängigkeiten",
-                "ru": "Мажорная версия: Полная модернизация кода, улучшенная безопасность, улучшенная обработка ошибок, миграция TypeScript, обновленные зависимости",
-                "pt": "Versão principal: Modernização completa do código, segurança aprimorada, tratamento de erros aprimorado, migração do TypeScript, dependências atualizadas",
-                "nl": "Grote release: Volledige codemodernisering, verbeterde beveiliging, verbeterde foutafhandeling, TypeScript-migratie, bijgewerkte afhankelijkheden",
-                "fr": "Version majeure : Modernisation complète du code, sécurité renforcée, gestion d'erreurs améliorée, migration TypeScript, dépendances mises à jour",
-                "it": "Versione principale: Modernizzazione completa del codice, sicurezza migliorata, gestione degli errori migliorata, migrazione TypeScript, dipendenze aggiornate",
-                "es": "Versión principal: Modernización completa del código, seguridad mejorada, manejo de errores mejorado, migración de TypeScript, dependencias actualizadas",
-                "pl": "Główne wydanie: Pełna modernizacja kodu, zwiększone bezpieczeństwo, ulepszona obsługa błędów, migracja TypeScript, zaktualizowane zależności",
-                "zh-cn": "主要版本：完整的代码现代化、增强的安全性、改进的错误处理、TypeScript迁移、更新的依赖项"
-            },
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版"
-            },
-            "0.0.2": {
-                "en": "Some minor fixes to build pipeline",
-                "de": "Einige kleinere Korrekturen zum Erstellen der Pipeline",
-                "ru": "Некоторые мелкие исправления для сборки конвейера",
-                "pt": "Algumas pequenas correções para construir pipeline",
-                "nl": "Enkele kleine fixes om een ​​pijplijn te bouwen",
-                "fr": "Quelques corrections mineures pour créer un pipeline",
-                "it": "Alcune correzioni minori per costruire la pipeline",
-                "es": "Algunas correcciones menores para construir una canalización",
-                "pl": "Kilka drobnych poprawek do budowy potoku",
-                "zh-cn": "一些较小的修复程序来构建管道"
-            },
-            "0.0.3": {
-                "en": "Some minor fixes to build pipeline",
-                "de": "Einige kleinere Korrekturen zum Erstellen der Pipeline",
-                "ru": "Некоторые мелкие исправления для сборки конвейера",
-                "pt": "Algumas pequenas correções para construir pipeline",
-                "nl": "Enkele kleine fixes om een ​​pijplijn te bouwen",
-                "fr": "Quelques corrections mineures pour créer un pipeline",
-                "it": "Alcune correzioni minori per costruire la pipeline",
-                "es": "Algunas correcciones menores para construir una canalización",
-                "pl": "Kilka drobnych poprawek do budowy potoku",
-                "zh-cn": "一些较小的修复程序来构建管道"
-            },
-            "0.0.4": {
-                "en": "Bugfix username and password",
-                "de": "Bugfix Benutzername und Passwort",
-                "ru": "Исправлено имя пользователя и пароль",
-                "pt": "Correção de usuário e senha",
-                "nl": "Gebruikersnaam en wachtwoord voor bugfix",
-                "fr": "Nom d'utilisateur et mot de passe de correction de bogue",
-                "it": "Nome utente e password corretti per bug",
-                "es": "Corrección de errores de nombre de usuario y contraseña",
-                "pl": "Nazwa użytkownika i hasło do naprawy błędów",
-                "zh-cn": "修正用户名和密码"
-            }
-        },
-        "titleLang": {
-            "en": "AirConWithMe",
-            "de": "AirConWithMe",
-            "ru": "AirConWithMe",
-            "pt": "AirConWithMe",
-            "nl": "AirConWithMe",
-            "fr": "AirConWithMe",
-            "it": "AirConWithMe",
-            "es": "AirConWithMe",
-            "pl": "AirConWithMe",
-            "zh-cn": "AirConWithMe"
-        },
-        "desc": {
-            "en": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
-            "de": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
-            "ru": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
-            "pt": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
-            "nl": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
-            "fr": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
-            "it": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
-            "es": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
-            "pl": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
-            "zh-cn": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter"
-        },
-        "authors": [
-            "Torsten Weggen <weggen@bitboxx.net>"
-        ],
-        "keywords": [
-            "iobroker adapter aircondition mitsubishi"
-        ],
-        "licenseInformation": {
-            "type": "free",
-            "license": "MIT"
-        },
-        "platform": "Javascript/Node.js",
-        "icon": "airconwithme.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/weggetor/ioBroker.airconwithme/master/admin/airconwithme.png",
-        "readme": "https://github.com/weggetor/ioBroker.airconwithme/blob/master/README.md",
-        "loglevel": "info",
-        "tier": 2,
-        "mode": "daemon",
-        "type": "climate-control",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "index_m.html"
-        },
-        "materialize": true,
-        "materializeTab": false,
-        "supportCustoms": false,
-        "dependencies": [
-            {
-                "js-controller": ">=6.0.11"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=7.6.17"
-            }
-        ]
+  "common": {
+    "name": "airconwithme",
+    "version": "1.0.0",
+    "news": {
+      "1.0.0": {
+        "en": "Major release: Complete code modernization, enhanced security, improved error handling, TypeScript migration, updated dependencies",
+        "de": "Major Release: Vollständige Code-Modernisierung, erweiterte Sicherheit, verbesserte Fehlerbehandlung, TypeScript-Migration, aktualisierte Abhängigkeiten",
+        "ru": "Мажорная версия: Полная модернизация кода, улучшенная безопасность, улучшенная обработка ошибок, миграция TypeScript, обновленные зависимости",
+        "pt": "Versão principal: Modernização completa do código, segurança aprimorada, tratamento de erros aprimorado, migração do TypeScript, dependências atualizadas",
+        "nl": "Grote release: Volledige codemodernisering, verbeterde beveiliging, verbeterde foutafhandeling, TypeScript-migratie, bijgewerkte afhankelijkheden",
+        "fr": "Version majeure : Modernisation complète du code, sécurité renforcée, gestion d'erreurs améliorée, migration TypeScript, dépendances mises à jour",
+        "it": "Versione principale: Modernizzazione completa del codice, sicurezza migliorata, gestione degli errori migliorata, migrazione TypeScript, dipendenze aggiornate",
+        "es": "Versión principal: Modernización completa del código, seguridad mejorada, manejo de errores mejorado, migración de TypeScript, dependencias actualizadas",
+        "pl": "Główne wydanie: Pełna modernizacja kodu, zwiększone bezpieczeństwo, ulepszona obsługa błędów, migracja TypeScript, zaktualizowane zależności",
+        "zh-cn": "主要版本：完整的代码现代化、增强的安全性、改进的错误处理、TypeScript迁移、更新的依赖项"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "zh-cn": "首次出版"
+      },
+      "0.0.2": {
+        "en": "Some minor fixes to build pipeline",
+        "de": "Einige kleinere Korrekturen zum Erstellen der Pipeline",
+        "ru": "Некоторые мелкие исправления для сборки конвейера",
+        "pt": "Algumas pequenas correções para construir pipeline",
+        "nl": "Enkele kleine fixes om een ​​pijplijn te bouwen",
+        "fr": "Quelques corrections mineures pour créer un pipeline",
+        "it": "Alcune correzioni minori per costruire la pipeline",
+        "es": "Algunas correcciones menores para construir una canalización",
+        "pl": "Kilka drobnych poprawek do budowy potoku",
+        "zh-cn": "一些较小的修复程序来构建管道"
+      },
+      "0.0.3": {
+        "en": "Some minor fixes to build pipeline",
+        "de": "Einige kleinere Korrekturen zum Erstellen der Pipeline",
+        "ru": "Некоторые мелкие исправления для сборки конвейера",
+        "pt": "Algumas pequenas correções para construir pipeline",
+        "nl": "Enkele kleine fixes om een ​​pijplijn te bouwen",
+        "fr": "Quelques corrections mineures pour créer un pipeline",
+        "it": "Alcune correzioni minori per costruire la pipeline",
+        "es": "Algunas correcciones menores para construir una canalización",
+        "pl": "Kilka drobnych poprawek do budowy potoku",
+        "zh-cn": "一些较小的修复程序来构建管道"
+      },
+      "0.0.4": {
+        "en": "Bugfix username and password",
+        "de": "Bugfix Benutzername und Passwort",
+        "ru": "Исправлено имя пользователя и пароль",
+        "pt": "Correção de usuário e senha",
+        "nl": "Gebruikersnaam en wachtwoord voor bugfix",
+        "fr": "Nom d'utilisateur et mot de passe de correction de bogue",
+        "it": "Nome utente e password corretti per bug",
+        "es": "Corrección de errores de nombre de usuario y contraseña",
+        "pl": "Nazwa użytkownika i hasło do naprawy błędów",
+        "zh-cn": "修正用户名和密码"
+      }
     },
-    "native": {},
-    "objects": [],
-    "instanceObjects": []
+    "titleLang": {
+      "en": "AirConWithMe",
+      "de": "AirConWithMe",
+      "ru": "AirConWithMe",
+      "pt": "AirConWithMe",
+      "nl": "AirConWithMe",
+      "fr": "AirConWithMe",
+      "it": "AirConWithMe",
+      "es": "AirConWithMe",
+      "pl": "AirConWithMe",
+      "zh-cn": "AirConWithMe"
+    },
+    "desc": {
+      "en": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+      "de": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+      "ru": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+      "pt": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+      "nl": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+      "fr": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+      "it": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+      "es": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+      "pl": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter",
+      "zh-cn": "Adapter for Mitsubishi aircondition with airconwithme wlan adapter"
+    },
+    "authors": [
+      "Torsten Weggen <weggen@bitboxx.net>"
+    ],
+    "keywords": [
+      "iobroker adapter aircondition mitsubishi"
+    ],
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "airconwithme.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/weggetor/ioBroker.airconwithme/master/admin/airconwithme.png",
+    "readme": "https://github.com/weggetor/ioBroker.airconwithme/blob/master/README.md",
+    "loglevel": "info",
+    "tier": 2,
+    "mode": "daemon",
+    "type": "climate-control",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "index_m.html"
+    },
+    "materializeTab": false,
+    "supportCustoms": false,
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.6.17"
+      }
+    ]
+  },
+  "native": {},
+  "objects": [],
+  "instanceObjects": []
 }
