@@ -2,13 +2,17 @@
 version: 2
 updates:
 
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "cron"
-      timezone: "Europe/Berlin"
-      cronjob: "4 2 3 * *"
+      interval: 'cron'
+      timezone: 'Europe/Berlin'
+      cronjob: '4 2 3 * *'
     open-pull-requests-limit: 20
     assignees:
-      - "weggetor"
-    versioning-strategy: "increase"
+      - 'weggetor'
+    versioning-strategy: 'increase'
+    ignore:
+      - dependency-name: '@types/node'
+        update-types:
+          - 'version-update:semver-major'
