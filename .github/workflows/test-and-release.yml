@@ -43,7 +43,7 @@ jobs:
 
         strategy:
             matrix:
-                node-version: [18.x, 20.x]
+                node-version: [18.x, 22.x]
 
         steps:
             - name: Checkout code
@@ -75,7 +75,7 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                node-version: [18.x, 20.x, 22.x]
+                node-version: [18.x, 22.x]
                 os: [ubuntu-latest, windows-latest, macos-latest]
 
         steps:
@@ -124,7 +124,7 @@ jobs:
            id-token: write
        strategy:
            matrix:
-               node-version: [20.x]
+               node-version: [22.x]
 
        steps:
            - name: Checkout code
