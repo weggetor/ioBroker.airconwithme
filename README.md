@@ -32,6 +32,9 @@ Most datapoints are readonly, you can set the following:
 | remoteDisable | 0: Enable; 1: Disable |
 
 ## Changelog
+
+### **WORK IN PROGRESS**
+- (iobroker-bot) Adapter requires node.js >= 22 now.
 ### 1.0.0 (2025-11-15)
 * (weggetor) **MAJOR RELEASE**: Complete adapter modernization
 * (weggetor) **BREAKING**: Migrated to TypeScript with modern ES2020+ features
